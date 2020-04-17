@@ -23,7 +23,7 @@
         android:id="@+id/button_post"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Download file from server no arg" />
+        android:text="Download file from server" />
     <TextView
         android:layout_marginTop="16dp"
         android:id="@+id/text_view_result2"
@@ -36,11 +36,6 @@
         android:id="@+id/button_my_files"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="My Downloads" />
-    <Button
-        android:id="@+id/button_post_image"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Download file and img from server with arg" />
+        android:text="Download file from server" />
 
 </LinearLayout>

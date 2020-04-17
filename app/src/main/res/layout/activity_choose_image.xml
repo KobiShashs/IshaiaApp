@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activities.ChooseImageActivity">
+
+    <ImageView
+        android:layout_marginTop="16dp"
+        android:id="@+id/image_view"
+        android:visibility="gone"
+        android:layout_width="300dp"
+        android:layout_height="250dp"
+        android:layout_gravity="center"/>
+    <EditText
+        android:id="@+id/edit_text_img_title"
+        android:layout_marginTop="16dp"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter image title"/>
+
+    <Button
+        android:id="@+id/button_choose_image_camera"
+        android:layout_marginTop="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginEnd="25dp"
+        android:text="Choose Image from Camera"
+        />
+
+    <Button
+        android:id="@+id/button_choose_image_gallery"
+        android:layout_marginTop="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginEnd="25dp"
+        android:text="Choose Image from Gallery"
+        />
+</LinearLayout>

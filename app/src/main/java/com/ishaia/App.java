@@ -17,8 +17,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class App extends Application {
     private static final String TAG = App.class.getSimpleName();
-    private static final String BASE_URL = "https://ishaia7.pythonanywhere.com/";
-
+    //private static final String BASE_URL = "https://ishaia7.pythonanywhere.com/";
+    private static final String BASE_URL = "http://ec2-3-21-102-110.us-east-2.compute.amazonaws.com/";
     private static App INSTANCE;
 
 
@@ -95,7 +95,7 @@ public class App extends Application {
     }
 
 
-    public ApiService getLoginService() {
+    public ApiService getApiService() {
         return apiService;
     }
 
