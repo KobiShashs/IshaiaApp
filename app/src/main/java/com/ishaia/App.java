@@ -10,6 +10,18 @@ import com.ishaia.security.DecryptionInterceptor;
 import com.ishaia.security.EncryptionImpl;
 import com.ishaia.security.EncryptionInterceptor;
 
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import java.util.concurrent.TimeUnit;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -18,7 +30,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class App extends Application {
     private static final String TAG = App.class.getSimpleName();
     //private static final String BASE_URL = "https://ishaia7.pythonanywhere.com/";
-    private static final String BASE_URL = "http://ec2-3-21-102-110.us-east-2.compute.amazonaws.com/";
+    public static final String BASE_URL = "https://ec2-3-21-102-110.us-east-2.compute.amazonaws.com/";
     private static App INSTANCE;
 
 
@@ -37,7 +49,57 @@ public class App extends Application {
                 .setLenient()
                 .create();
 
+
+        final TrustManager[] trustAllCerts = new TrustManager[] {
+                new X509TrustManager() {
+                    @Override
+                    public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
+                    }
+
+                    @Override
+                    public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
+                    }
+
+                    @Override
+                    public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                        return new java.security.cert.X509Certificate[]{};
+                    }
+                }
+        };
+
+        // Install the all-trusting trust manager
+        SSLContext sslContext = null;
+        try {
+            sslContext = SSLContext.getInstance("SSL");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        try {
+            sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
+        } catch (KeyManagementException e) {
+            e.printStackTrace();
+        }
+
+        // Create an ssl socket factory with our all-trusting manager
+        final SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
+
+
         OkHttpClient.Builder httpBuilder = new OkHttpClient.Builder();
+        httpBuilder.sslSocketFactory(sslSocketFactory, (X509TrustManager)trustAllCerts[0]);
+        httpBuilder.hostnameVerifier(new HostnameVerifier() {
+            @Override
+            public boolean verify(String hostname, SSLSession session) {
+                return true;
+            }
+        });
+
+        //OkHttpClient okHttpClient = httpBuilder.build();
+
+//        OkHttpClient okHttpClient2 = new OkHttpClient().newBuilder()
+//                .connectTimeout(10, TimeUnit.SECONDS)
+//                .readTimeout(10, TimeUnit.SECONDS)
+//                .writeTimeout(10, TimeUnit.SECONDS)
+//                .build();
 
 //        //Gson Builder
 //        GsonBuilder gsonBuilder = new GsonBuilder();
@@ -83,8 +145,9 @@ public class App extends Application {
 //                .build();
                 Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create(gson))
-                //   .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
                 .baseUrl(BASE_URL)
+                .client(okHttpClient)
                 .build();
 
 

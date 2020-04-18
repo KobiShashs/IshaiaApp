@@ -41,4 +41,15 @@
         android:layout_marginEnd="25dp"
         android:text="Choose Image from Gallery"
         />
+
+    <Button
+        android:id="@+id/button_upload"
+        android:layout_marginTop="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginEnd="25dp"
+        android:text="Upload Image"
+        android:enabled="false"
+        />
 </LinearLayout>

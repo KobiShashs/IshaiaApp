@@ -13,8 +13,10 @@ import android.widget.TextView;
 
 import com.ishaia.App;
 import com.ishaia.R;
+import com.ishaia.api.ApiService;
 import com.ishaia.model.UploadResponse;
 import com.ishaia.utils.FileUtils;
+import com.ishaia.utils.UnsafeOkHttpClient;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -22,10 +24,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -111,17 +116,56 @@ public class MainActivity extends AppCompatActivity {
 
     private void getExampleCommand() {
 
-        App.get().getApiService().upload().enqueue(new Callback<UploadResponse>() {
+        System.out.println("aaaaaa");
+        OkHttpClient okHttpClient = UnsafeOkHttpClient.getUnsafeOkHttpClient();
+        Retrofit.Builder builder = new Retrofit.Builder()
+                .baseUrl(App.get().BASE_URL)
+                .client(okHttpClient)
+                .addConverterFactory(GsonConverterFactory.create());
+
+        Retrofit retrofit = builder.build();
+
+        ApiService apiService = retrofit.create(ApiService.class);
+        Call<UploadResponse> call = apiService.upload();
+
+        call.enqueue(new Callback<UploadResponse>() {
             @Override
             public void onResponse(Call<UploadResponse> call, Response<UploadResponse> response) {
+                System.out.println("bbbbbb1111");
                 textViewResult.setText(response.body().getContent());
+                System.out.println("bbbbbb2222");
             }
 
             @Override
             public void onFailure(Call<UploadResponse> call, Throwable t) {
+                System.out.println("ccccc1111");
+                System.out.println(call.request().url());
+                System.out.println(t.getMessage());
+                System.out.println(t.getCause());
                 textViewResult.setText("Sorry...not available...");
+                System.out.println("ccccc1111");
             }
         });
+
+//        App.get().getApiService().upload().enqueue(new Callback<UploadResponse>() {
+//
+//            @Override
+//            public void onResponse(Call<UploadResponse> call, Response<UploadResponse> response) {
+//                System.out.println("bbbbbb1111");
+//                textViewResult.setText(response.body().getContent());
+//                System.out.println("bbbbbb2222");
+//            }
+//
+//            @Override
+//            public void onFailure(Call<UploadResponse> call, Throwable t) {
+//                System.out.println("ccccc1111");
+//                System.out.println(call.request().url());
+//                System.out.println(t.getMessage());
+//                System.out.println(t.getCause());
+//                textViewResult.setText("Sorry...not available...");
+//                System.out.println("ccccc1111");
+//            }
+//        });
 
     }
 
