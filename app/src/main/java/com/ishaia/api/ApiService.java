@@ -33,7 +33,7 @@ public interface ApiService {
 
     @Multipart
     @POST(".")
-    Call<UploadImageResponse> uploadImage2(@Part MultipartBody.Part filePart);
+    Call<ResponseBody> uploadImage2(@Part MultipartBody.Part filePart);
 
     @FormUrlEncoded
     @POST(".")

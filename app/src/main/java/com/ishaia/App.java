@@ -30,7 +30,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class App extends Application {
     private static final String TAG = App.class.getSimpleName();
     //private static final String BASE_URL = "https://ishaia7.pythonanywhere.com/";
-    public static final String BASE_URL = "https://ec2-3-21-102-110.us-east-2.compute.amazonaws.com/";
+    //public static final String BASE_URL = "https://ec2-3-21-102-110.us-east-2.compute.amazonaws.com/";
+    public static final String BASE_URL = "https://www.noteappproject.info/";
     private static App INSTANCE;
 
 

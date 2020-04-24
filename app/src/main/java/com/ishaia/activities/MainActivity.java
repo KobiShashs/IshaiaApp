@@ -116,7 +116,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void getExampleCommand() {
 
-        System.out.println("aaaaaa");
         OkHttpClient okHttpClient = UnsafeOkHttpClient.getUnsafeOkHttpClient();
         Retrofit.Builder builder = new Retrofit.Builder()
                 .baseUrl(App.get().BASE_URL)
@@ -131,42 +130,14 @@ public class MainActivity extends AppCompatActivity {
         call.enqueue(new Callback<UploadResponse>() {
             @Override
             public void onResponse(Call<UploadResponse> call, Response<UploadResponse> response) {
-                System.out.println("bbbbbb1111");
                 textViewResult.setText(response.body().getContent());
-                System.out.println("bbbbbb2222");
             }
 
             @Override
             public void onFailure(Call<UploadResponse> call, Throwable t) {
-                System.out.println("ccccc1111");
-                System.out.println(call.request().url());
-                System.out.println(t.getMessage());
-                System.out.println(t.getCause());
                 textViewResult.setText("Sorry...not available...");
-                System.out.println("ccccc1111");
             }
         });
-
-//        App.get().getApiService().upload().enqueue(new Callback<UploadResponse>() {
-//
-//            @Override
-//            public void onResponse(Call<UploadResponse> call, Response<UploadResponse> response) {
-//                System.out.println("bbbbbb1111");
-//                textViewResult.setText(response.body().getContent());
-//                System.out.println("bbbbbb2222");
-//            }
-//
-//            @Override
-//            public void onFailure(Call<UploadResponse> call, Throwable t) {
-//                System.out.println("ccccc1111");
-//                System.out.println(call.request().url());
-//                System.out.println(t.getMessage());
-//                System.out.println(t.getCause());
-//                textViewResult.setText("Sorry...not available...");
-//                System.out.println("ccccc1111");
-//            }
-//        });
-
     }
 
     private void setViews() {
@@ -175,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
         buttonPost = (Button) findViewById(R.id.button_post);
         textViewResult2 = (TextView) findViewById(R.id.text_view_result2);
         buttonMyFiles = (Button) findViewById(R.id.button_my_files);
-        buttonPostWithArg = (Button)findViewById(R.id.button_post_image);
+        buttonPostWithArg = (Button) findViewById(R.id.button_post_image);
     }
 
 

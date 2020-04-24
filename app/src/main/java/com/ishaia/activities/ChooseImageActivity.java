@@ -33,8 +33,11 @@ import com.ishaia.utils.FileUtils;
 import com.ishaia.utils.UnsafeOkHttpClient;
 
 import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -43,11 +46,15 @@ import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.Multipart;
+
+
 
 public class ChooseImageActivity extends AppCompatActivity {
 
@@ -117,48 +124,51 @@ public class ChooseImageActivity extends AppCompatActivity {
         String title  = imgTitle.getText().toString();
 
 
-        OkHttpClient okHttpClient = UnsafeOkHttpClient.getUnsafeOkHttpClient();
-        Retrofit.Builder builder = new Retrofit.Builder()
-                .baseUrl(App.get().BASE_URL)
-                .client(okHttpClient)
-                .addConverterFactory(GsonConverterFactory.create());
+//        OkHttpClient okHttpClient = UnsafeOkHttpClient.getUnsafeOkHttpClient();
+//        Retrofit.Builder builder = new Retrofit.Builder()
+//                .baseUrl(App.get().BASE_URL)
+//                .client(okHttpClient)
+//                .addConverterFactory(GsonConverterFactory.create());
 
-        Retrofit retrofit = builder.build();
+ //       Retrofit retrofit = builder.build();
 
-        ApiService apiService = retrofit.create(ApiService.class);
+  //      ApiService apiService = retrofit.create(ApiService.class);
 
         Bitmap bitmap = FileUtils.getBitmapFromImageView(img);
         File file = FileUtils.getImage(bitmap);
         MultipartBody.Part filePart = MultipartBody.Part.createFormData("file", file.getName(), RequestBody.create(MediaType.parse("image/*"), file));
+        RequestBody requestFile = RequestBody.create(MediaType.parse("multupart/form-data"),file);
+        MultipartBody.Part requestImage = null;
+        requestImage = MultipartBody.Part.createFormData("image",file.getName());
 
         System.out.println("aaaaa");
       // UploadImageResponse
 
-        Call<UploadImageResponse> call = apiService.uploadTheImage3(image);
-        // Call<UploadImageResponse> call = apiService.uploadImage2(filePart);
-        call.enqueue(new Callback<UploadImageResponse>() {
+        Call<ResponseBody> call = App.get().getApiService().uploadImage2(requestImage);
+        call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<UploadImageResponse> call, Response<UploadImageResponse> response) {
-                System.out.println("bbbbbbb");
-                System.out.println(call.request().url());
-                System.out.println(response.code());
-                System.out.println(response.isSuccessful());
-                System.out.println(response.message());
-                System.out.println(response.raw());
-                System.out.println(response);
-                System.out.println(new Gson().toJson(response));
-                UploadImageResponse uploadImageResponse = response.body();
-                String res = uploadImageResponse.getPicture()+"\n"+uploadImageResponse.getSong();
-                Toast.makeText(ChooseImageActivity.this, "res:"+res, Toast.LENGTH_SHORT).show();
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if(response.isSuccessful()){
+                    System.out.println("Got 200");
+                    try {
+                        System.out.println(response.body().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        System.out.println("Got 400");
+                    }
+                    try {
+                        System.out.println(response.body().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }else{
+                    System.out.println("Got 400");
+                }
             }
 
             @Override
-            public void onFailure(Call<UploadImageResponse> call, Throwable t) {
-                System.out.println("cccccccc");
-                System.out.println(t.fillInStackTrace());
-                System.out.println(t.getCause());
-                System.out.println(t.getMessage());
-                Toast.makeText(ChooseImageActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                System.out.println("Got BADDDD");
             }
         });
 
@@ -199,6 +209,7 @@ public class ChooseImageActivity extends AppCompatActivity {
 //            }
 //        });
     }
+
 
 
     private void openCameraIntent() {
